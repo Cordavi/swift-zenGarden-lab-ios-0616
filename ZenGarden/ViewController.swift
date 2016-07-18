@@ -36,23 +36,23 @@ class ViewController: UIViewController {
       rockImage.translatesAutoresizingMaskIntoConstraints = false
       rakeImage.translatesAutoresizingMaskIntoConstraints = false
       
-      rakeImage.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: -100).active = true
-      rakeImage.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: 100).active = true
+      rakeImage.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0).active = true
+      rakeImage.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: 0).active = true
       rakeImage.heightAnchor.constraintEqualToAnchor(view.heightAnchor, multiplier: (rakeImage.frame.size.height / rakeImage.frame.size.width) * 0.25).active = true
       rakeImage.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: (rakeImage.frame.size.width / rakeImage.frame.size.height) * 0.25).active = true
       
-      rockImage.topAnchor.constraintEqualToAnchor(view.topAnchor).active = true
-      rockImage.leftAnchor.constraintEqualToAnchor(view.leftAnchor).active = true
+      rockImage.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0).active = true
+      rockImage.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: 0).active = true
       rockImage.heightAnchor.constraintEqualToAnchor(view.heightAnchor, multiplier: (rockImage.frame.size.height / rockImage.frame.size.width) * 0.25).active = true
       rockImage.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: (rockImage.frame.size.width / rockImage.frame.size.height) * 0.25).active = true
       
-      swordInStoneImage.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).active = true
-      swordInStoneImage.leftAnchor.constraintEqualToAnchor(view.leftAnchor).active = true
+      swordInStoneImage.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0).active = true
+      swordInStoneImage.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: 0).active = true
       swordInStoneImage.heightAnchor.constraintEqualToAnchor(view.heightAnchor, multiplier: (swordInStoneImage.frame.size.height / swordInStoneImage.frame.size.width) * 0.25).active = true
       swordInStoneImage.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: (swordInStoneImage.frame.size.width / swordInStoneImage.frame.size.height) * 0.25).active = true
       
-      bushImage.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 100).active = true
-      bushImage.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: -100).active = true
+      bushImage.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0).active = true
+      bushImage.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: 0).active = true
       bushImage.heightAnchor.constraintEqualToAnchor(view.heightAnchor, multiplier: (bushImage.frame.size.height / bushImage.frame.size.width) * 0.25).active = true
       bushImage.widthAnchor.constraintEqualToAnchor(view.widthAnchor, multiplier: (bushImage.frame.size.width / bushImage.frame.size.height) * 0.25).active = true
    }
@@ -70,9 +70,43 @@ class ViewController: UIViewController {
       
       let endCenterX = startCenterX + translation.x
       let endCenterY = startCenterY + translation.y
-      
       sender.view?.center = CGPointMake(endCenterX, endCenterY)
       sender.setTranslation(CGPointZero, inView: self.view)
+      
+      defer {
+         checkForWin()
+      }
+   }
+   
+   func checkForWin() {
+      guard bushImage.distanceToView(rakeImage) <= 80 else {
+         return
+      }
+      guard swordInStoneImage.frame.minX <= 0 && swordInStoneImage.frame.maxY >= view.frame.maxY || swordInStoneImage.frame.minX <= 5 && swordInStoneImage.frame.minY <= 20 else {
+         return
+      }
+      guard swordInStoneImage.distanceToView(rockImage) >= Double(view.frame.maxY / 2) else {
+         return
+      }
+      presentWin()
+   }
+   
+   func presentWin() {
+      let alertController = UIAlertController(title: "Congrats", message: "You won!", preferredStyle: .Alert)
+      let defaultAction = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+      alertController.addAction(defaultAction)
+      presentViewController(alertController, animated: true, completion: nil)
+      shuffleObjects()
+   }
+   
+   func shuffleObjects() {
+      
+   }
+}
+
+extension UIView {
+   func distanceToView(sender:UIView) -> Double {
+      return sqrt(pow(Double(sender.center.x - self.center.x), 2) + pow(Double(sender.center.y - self.center.y), 2))
    }
    
 }
