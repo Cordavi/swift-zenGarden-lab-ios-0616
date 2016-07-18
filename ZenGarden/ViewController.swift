@@ -85,7 +85,7 @@ class ViewController: UIViewController {
       guard swordInStoneImage.frame.minX <= 0 && swordInStoneImage.frame.maxY >= view.frame.maxY || swordInStoneImage.frame.minX <= 5 && swordInStoneImage.frame.minY <= 20 else {
          return
       }
-      guard swordInStoneImage.distanceToView(rockImage) >= Double(view.frame.maxY / 2) else {
+      guard swordInStoneImage.distanceToView(rockImage) >= Double(view.frame.maxY / 1.15) else {
          return
       }
       presentWin()
@@ -93,14 +93,12 @@ class ViewController: UIViewController {
    
    func presentWin() {
       let alertController = UIAlertController(title: "Congrats", message: "You won!", preferredStyle: .Alert)
-      let defaultAction = UIAlertAction(title: "Ok", style: .Default, handler: nil)
-      alertController.addAction(defaultAction)
-      presentViewController(alertController, animated: true, completion: nil)
-      shuffleObjects()
-   }
-   
-   func shuffleObjects() {
       
+      let OKAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+      alertController.addAction(OKAction)
+      
+      self.presentViewController(alertController, animated: true, completion: nil)
+      setConstraints()
    }
 }
 
